@@ -1,0 +1,66 @@
+ 
+ /*============= outerTable ===============*/
+ tr,td{
+    margin: 0;
+    padding: 0;
+    vertical-align: top;
+ }
+
+.p-3, .p-2{padding: 10px;}
+
+ #outerTable{
+    margin: 0 auto ;
+    width: 800px;
+ }
+ 
+ td#balad{
+    height: 190px;
+ }
+ 
+ #balad div{
+    height: 188px;
+ }
+ 
+ #balad img{
+    margin: 0;
+    border: 0;
+ }
+ td#header{
+    height:190px;
+ }
+ #header h1{
+    margin: 0;
+    border: 0;
+    color: #8D0D19;
+ }
+ #header p{
+    margin: 0;
+    border: 0;
+    line-height: 60px;
+ }
+ td#right{
+   width: 490px;
+   border: 0
+   
+ }
+td#pix{
+   width: 130px;
+   height: 100px;
+   padding: 5px;
+   border: 1px solid #999;
+}
+
+
+    .desktop{
+        display: block;
+        height: 100%;
+    }
+    .mobile{display: none;}
+    @media screen and (max-width: 1025px){
+          .desktop{
+        display: none;
+    }
+    .mobile{display: block;}
+}
+
+ 
