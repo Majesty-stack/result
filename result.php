@@ -80,8 +80,7 @@ include('includes/config.php');
 $rollid=$_POST['rollid'];
 $classid=$_POST['class'];
 $_SESSION['rollid']=$rollid;
-$_SESSION['classid']=$classid;
-$_SESSION['StudentId']=$StudentId;	
+$_SESSION['classid']=$classid;	
 $query = "SELECT   tblstudents.StudentName,tblstudents.RollId,tblstudents.AdmissionNumber,tblstudents.Age,tblstudents.Sex,tblstudents.image,tblstudents.RegDate,tblstudents.StudentId,tblstudents.Status,tblclasses.Session,tblclasses.ClassName,tblclasses.Exam from tblstudents join tblclasses on tblclasses.id=tblstudents.ClassId where tblstudents.RollId=:rollid and tblstudents.ClassId=:classid";
 $stmt = $dbh->prepare($query);
 $stmt->bindParam(':rollid',$rollid,PDO::PARAM_STR);
@@ -92,6 +91,7 @@ $cnt=1;
 if($stmt->rowCount() > 0)
 {
 foreach($resultss as $row)
+$studentid= $row->StudentId;
 {   ?>
 <tr>
 <td id="left">
@@ -152,6 +152,7 @@ if($countrow=$query->rowCount()>0)
 { 
 foreach($results as $result){
 	$subject_id= $result->SubjectId;
+    
 ?>
 <tr>
 <th scope="row"><?php echo htmlentities($cnt);?></th>
@@ -163,10 +164,12 @@ foreach($results as $result){
 echo htmlentities($totalscore=$totalCA+$totalCASS+$totalmarks);
 // This query is suppose to return the value of the thirdterm scores into the database but in this case it returned only one value and duplicate it.
 // Pls refer to my database of tblresult for more clarification.
-$sql="update  tblresult set ThirdTerm=:thirdterm where ClassId=:classid";
+$sql="update  tblresult set ThirdTerm=:thirdterm where ClassId=:classid and StudentId=:studentid and SubjectId=:subjectid";
 $query = $dbh->prepare($sql);
 $query->bindParam(':thirdterm',$totalscore,PDO::PARAM_STR);
 $query->bindParam(':classid',$classid,PDO::PARAM_STR);
+$query->bindParam(':subjectid',$subject_id,PDO::PARAM_STR);
+$query->bindParam(':studentid',$studentid,PDO::PARAM_STR);
 $query-> execute();
 ;?></td>
 <td><?php echo htmlentities($secondterm=$result->SecondTerm);?></td>
@@ -180,25 +183,116 @@ $average=(round (htmlentities($totals)/3));
 //This query is suppose to return the value of the average scores into the database but in this case it returned only one value and duplicate it.
 // the average score for each subject will be used as rank for each students
 // Pls refer to my database of tblresult for more clarification. 
-$sql="update  tblresult set Average=:average where ClassId=:classid";
+$sql="update  tblresult set Average=:average where ClassId=:classid and StudentId=:studentid and SubjectId=:subjectid";
 $query = $dbh->prepare($sql);
 $query->bindParam(':average',$average,PDO::PARAM_STR);
 $query->bindParam(':classid',$classid,PDO::PARAM_STR);
+$query->bindParam(':subjectid',$subject_id,PDO::PARAM_STR);
+$query->bindParam(':studentid',$studentid,PDO::PARAM_STR);
 $query-> execute();
 ?>
 </td>
 <td>
 	
-<?php 
-$query ="select (FirstTerm+ThirdTerm+SecondTerm) as total from tblresult where ClassId=:classid and SubjectId=:subjectid ORDER BY total DESC";
+<?php
+$query ="select Average as total from tblresult where ClassId=:classid and SubjectId=:subjectid ORDER BY total DESC";
 $query= $dbh -> prepare($query);
 $query->bindParam(':subjectid',$subject_id,PDO::PARAM_STR);
 $query->bindParam(':classid',$classid,PDO::PARAM_STR);
 $query-> execute();  
 $subjects = $query -> fetchAll(PDO::FETCH_ASSOC);
 $pos_array= array_column($subjects, 'total');
-$position = array_search($totals, $pos_array)+1;
-echo $position.'/'.count($pos_array)
+$position = array_search($totals, $pos_array)+1; 
+ if($position=1){
+	echo "1st";
+ }
+ elseif($position=2){
+	echo"2nd";
+ }
+ elseif($position=3){
+	echo"3rd";
+ }
+ elseif($position=4){
+	echo"4th";
+ }
+ elseif($position=5){
+	echo"5th";
+ }
+ elseif($position=6){
+	echo"6th";
+ }
+ elseif($position=7){
+	echo"7th";
+ }
+ elseif($position=8){
+	echo"8th";
+ }
+ elseif($position=9){
+	echo"9th";
+ }
+ elseif($position=10){
+	echo"10th";
+ }
+ elseif($position=11){
+	echo"11th";
+ }
+ elseif($position=12){
+	echo"12th";
+ }
+ elseif($position=13){
+	echo"13th";
+ }
+ elseif($position=14){
+	echo"14th";
+ }
+ elseif($position=15){
+	echo"15th";
+ }
+ elseif($position=16){
+	echo"16th";
+ }
+ elseif($position=17){
+	echo"17th";
+ }
+ elseif($position=18){
+	echo"18th";
+ }
+ elseif($position=19){
+	echo"19th";
+ }
+ elseif($position=20){
+	echo"20th";
+ }
+ elseif($position=21){
+	echo"21st";
+ }
+ elseif($position=22){
+	echo"22nd";
+ }
+ elseif($position=23){
+	echo"23rd";
+ }
+ elseif($position=24){
+	echo"24th";
+ }
+ elseif($position=25){
+	echo"25th";
+ }
+ elseif($position=26){
+	echo"26th";
+ }
+ elseif($position=27){
+	echo"27th";
+ }
+ elseif($position=28){
+	echo"28th";
+ }
+ elseif($position=29){
+	echo"29th";
+ }
+ else{
+ echo"30";
+ }
 ?>
 
 </td>
@@ -236,7 +330,7 @@ $cnt++;}
 <td scope="row" colspan="2" ><b><?php echo htmlentities($totlcount); ?></b> out of <?php echo htmlentities($outof=($cnt-1)*300); ?></td>
 <td><b> Times school opened </b></td> <td> => <?php echo htmlentities($result->Open);?></td>
  <td><b>Times Present</b></td><td scope="row" colspan="1"> =><?php echo htmlentities($result->Present);?></td>
- <td><b> Times Absent </b></td> <td> => <?php echo htmlentities($result->Absent);?></td>
+ <td scope="row" colspan="2" ><b> Times Absent </b></td> <td scope="row" colspan="2"> => <?php echo htmlentities($result->Absent);?></td>
 </tr>
 <tr> <th scope="row" colspan="2"> Average Score </th>
 <td scope="row" colspan="2"> <?php $scores=(($totlcount)/3);
@@ -249,6 +343,7 @@ $query-> execute();
 ?>
 </td>
  <td scope="row" colspan="2"> <b>Percentage</b></td><td scope="row" colspan="2" ><?php echo  (round (htmlentities($totlcount*(100)/$outof,2))); ?>%</td>
+ <td scope="row" colspan="2"> <b>NO.in Class</b></td><td scope="row" colspan="2"> =><?php echo count($pos_array); ?> </td>
 </tr>
 </div
 </table>
