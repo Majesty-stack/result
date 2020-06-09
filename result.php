@@ -2,6 +2,26 @@
 session_start();
 error_reporting(0);
 include('includes/config.php');
+function ordinal($i) {
+	$j = abs($i); // make negatives into positives
+	$j = $j%100; // modulo 100; deal only with ones and tens; 0 through 99
+  
+	if($j>10 && $j<14) // if $j is over 10, but below 14 (so we deal with 11 to 13)
+	  return($i.'th'); // always return 'th' for 11th, 13th, 62912th, etc.
+  
+	$j = $j%10; // modulo 10; deal only with ones; 0 through 9
+  
+	if($j==1) // 1st, 21st, 31st, 971st
+	  return($i.'st');
+  
+	if($j==2) // 2nd, 22nd, 32nd, 582nd
+	  return($i.'nd'); // 
+  
+	if($j==3) // 3rd, 23rd, 33rd, 253rd
+	  return($i.'rd');
+  
+	return($i.'th'); // everything else will suffixed with 'th' including 0th
+  }
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -202,97 +222,8 @@ $query->bindParam(':classid',$classid,PDO::PARAM_STR);
 $query-> execute();  
 $subjects = $query -> fetchAll(PDO::FETCH_ASSOC);
 $pos_array= array_column($subjects, 'total');
-$position = array_search($totals, $pos_array)+1; 
- if($position=1){
-	echo "1st";
- }
- elseif($position=2){
-	echo"2nd";
- }
- elseif($position=3){
-	echo"3rd";
- }
- elseif($position=4){
-	echo"4th";
- }
- elseif($position=5){
-	echo"5th";
- }
- elseif($position=6){
-	echo"6th";
- }
- elseif($position=7){
-	echo"7th";
- }
- elseif($position=8){
-	echo"8th";
- }
- elseif($position=9){
-	echo"9th";
- }
- elseif($position=10){
-	echo"10th";
- }
- elseif($position=11){
-	echo"11th";
- }
- elseif($position=12){
-	echo"12th";
- }
- elseif($position=13){
-	echo"13th";
- }
- elseif($position=14){
-	echo"14th";
- }
- elseif($position=15){
-	echo"15th";
- }
- elseif($position=16){
-	echo"16th";
- }
- elseif($position=17){
-	echo"17th";
- }
- elseif($position=18){
-	echo"18th";
- }
- elseif($position=19){
-	echo"19th";
- }
- elseif($position=20){
-	echo"20th";
- }
- elseif($position=21){
-	echo"21st";
- }
- elseif($position=22){
-	echo"22nd";
- }
- elseif($position=23){
-	echo"23rd";
- }
- elseif($position=24){
-	echo"24th";
- }
- elseif($position=25){
-	echo"25th";
- }
- elseif($position=26){
-	echo"26th";
- }
- elseif($position=27){
-	echo"27th";
- }
- elseif($position=28){
-	echo"28th";
- }
- elseif($position=29){
-	echo"29th";
- }
- else{
- echo"30";
- }
+$position = array_search($average, $pos_array)+1; 
+echo ordinal($position);
 ?>
 
 </td>
