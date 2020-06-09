@@ -147,9 +147,11 @@ $query-> execute();
 $results = $query -> fetchAll(PDO::FETCH_OBJ);
 $cnt=1;
 $comment=$comment;
+
 if($countrow=$query->rowCount()>0)
 { 
 foreach($results as $result){
+	$subject_id= $result->SubjectId;
 ?>
 <tr>
 <th scope="row"><?php echo htmlentities($cnt);?></th>
@@ -187,7 +189,17 @@ $query-> execute();
 </td>
 <td>
 	
-<?php // the position for each subject will didplay here ?>
+<?php 
+$query ="select (FirstTerm+ThirdTerm+SecondTerm) as total from tblresult where ClassId=:classid and SubjectId=:subjectid ORDER BY total DESC";
+$query= $dbh -> prepare($query);
+$query->bindParam(':subjectid',$subject_id,PDO::PARAM_STR);
+$query->bindParam(':classid',$classid,PDO::PARAM_STR);
+$query-> execute();  
+$subjects = $query -> fetchAll(PDO::FETCH_ASSOC);
+$pos_array= array_column($subjects, 'total');
+$position = array_search($totals, $pos_array)+1;
+echo $position.'/'.count($pos_array)
+?>
 
 </td>
 <td><?php ($grade=(round (htmlentities(($average=$totalscore+$firstterm+$secondterm)/3,2))));
